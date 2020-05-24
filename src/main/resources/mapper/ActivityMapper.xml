@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.ActivityDao">
+
+    <select id="findById" resultType="com.model.Activity">
+        select `id`, `name`
+        from activity
+        where id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="com.model.Activity">
+        select `id`,`name` from activity
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+        </where>
+    </select>
+
+    <select id="list" resultType="com.model.Activity">
+        select `id`,`name` from activity
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="name != null and name != ''">and name =
+                #{name}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.model.Activity" useGeneratedKeys="true" keyProperty="id">
+        insert into activity(
+        <trim suffixOverrides=",">
+            <if test="name != null">`name`</if>
+        </trim>
+        )
+        values (
+        <trim suffixOverrides=",">
+            <if test="name != null">#{name}</if>
+        </trim>
+        )
+    </insert>
+
+    <update id="update" parameterType="com.model.Activity">
+        update activity
+        <set>
+            <if test="name != null">`name` = #{name}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from activity
+        where id = #{id}
+    </delete>
+
+</mapper>

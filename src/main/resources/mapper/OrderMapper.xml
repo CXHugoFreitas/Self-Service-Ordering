@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.OrderDao">
+
+    <select id="findById" resultType="com.model.Order">
+        select `id`,
+               `user_id`,
+               `desk_id`,
+               `address`,
+               `cate_id`,
+               `size`,
+               `num`,
+               `price`,
+               `pay_type`,
+               `status`,
+               `create_time`
+        from `order`
+        where id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="com.model.Order">
+        select `id`,`user_id`,`desk_id`,address,`cate_id`,`size`,`num`,`price`,`pay_type`,`status`,`create_time` from
+        `order`
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="deskId != null and deskId != ''">
+                and desk_id = #{deskId}
+            </if>
+            <if test="cateId != null and cateId != ''">
+                and cate_id = #{cateId}
+            </if>
+            <if test="size != null and size != ''">
+                and size = #{size}
+            </if>
+            <if test="num != null and num != ''">
+                and num = #{num}
+            </if>
+            <if test="price != null and price != ''">
+                and price = #{price}
+            </if>
+            <if test="payType != null and payType != ''">
+                and pay_type = #{payType}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="list" resultType="com.model.Order">
+        select `id`,`user_id`,`desk_id`,`cate_id`,`size`,`num`,`price`,`pay_type`,`status`,`create_time`, address from
+        `order`
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="deskId != null and deskId != ''">and desk_id =
+                #{deskId}
+            </if>
+            <if test="cateId != null and cateId != ''">and cate_id =
+                #{cateId}
+            </if>
+            <if test="size != null and size != ''">and size =
+                #{size}
+            </if>
+            <if test="num != null and num != ''">and num =
+                #{num}
+            </if>
+            <if test="price != null and price != ''">and price =
+                #{price}
+            </if>
+            <if test="payType != null and payType != ''">and pay_type =
+                #{payType}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+            <if test="createTime != null and createTime != ''">and create_time =
+                #{createTime}
+            </if>
+            <if test="address != null and address != ''">and address =
+                #{address}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.model.Order" useGeneratedKeys="true" keyProperty="id">
+        insert into order(
+        <trim suffixOverrides=",">
+            <if test="userId != null">`user_id`,</if>
+            <if test="deskId != null">`desk_id`,</if>
+            <if test="cateId != null">`cate_id`,</if>
+            <if test="size != null">`size`,</if>
+            <if test="num != null">`num`,</if>
+            <if test="price != null">`price`,</if>
+            <if test="payType != null">`pay_type`,</if>
+            <if test="status != null">`status`,</if>
+            <if test="createTime != null">`address`,</if>
+            <if test="createTime != null">`create_time`</if>
+        </trim>
+        )
+        values (
+        <trim suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="deskId != null">#{deskId},</if>
+            <if test="cateId != null">#{cateId},</if>
+            <if test="size != null">#{size},</if>
+            <if test="num != null">#{num},</if>
+            <if test="price != null">#{price},</if>
+            <if test="payType != null">#{payType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="address != null">#{address},</if>
+            <if test="createTime != null">#{createTime}</if>
+        </trim>
+        )
+    </insert>
+
+    <update id="update" parameterType="com.model.Order">
+        update `order`
+        <set>
+            <if test="userId != null">`user_id` = #{userId}
+                ,
+            </if>
+            <if test="deskId != null">`desk_id` = #{deskId}
+                ,
+            </if>
+            <if test="cateId != null">`cate_id` = #{cateId}
+                ,
+            </if>
+            <if test="size != null">`size` = #{size}
+                ,
+            </if>
+            <if test="num != null">`num` = #{num}
+                ,
+            </if>
+            <if test="price != null">`price` = #{price}
+                ,
+            </if>
+            <if test="payType != null">`pay_type` = #{payType}
+                ,
+            </if>
+            <if test="status != null">`status` = #{status}
+                ,
+            </if>
+            <if test="createTime != null">`create_time` = #{createTime}
+            </if>
+            <if test="address != null">`address` = #{address}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from `order`
+        where id = #{id}
+    </delete>
+
+</mapper>

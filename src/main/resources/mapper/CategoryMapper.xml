@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.CategoryDao">
+
+    <select id="findById" resultType="com.model.Category">
+        select `id`, `cate_name`, `img`
+        from category
+        where id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="com.model.Category">
+        select `id`,`cate_name`,`img` from category
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="cateName != null and cateName != ''">
+                and cate_name = #{cateName}
+            </if>
+            <if test="img != null and img != ''">
+                and img = #{img}
+            </if>
+        </where>
+    </select>
+
+    <select id="list" resultType="com.model.Category">
+        select `id`,`cate_name`,`img` from category
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="cateName != null and cateName != ''">and cate_name =
+                #{cateName}
+            </if>
+            <if test="img != null and img != ''">and img =
+                #{img}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.model.Category" useGeneratedKeys="true" keyProperty="id">
+        insert into category(
+        <trim suffixOverrides=",">
+            <if test="cateName != null">`cate_name`,</if>
+            <if test="img != null">`img`</if>
+        </trim>
+        )
+        values (
+        <trim suffixOverrides=",">
+            <if test="cateName != null">#{cateName},</if>
+            <if test="img != null">#{img}</if>
+        </trim>
+        )
+    </insert>
+
+    <update id="update" parameterType="com.model.Category">
+        update category
+        <set>
+            <if test="cateName != null">`cate_name` = #{cateName}
+                ,
+            </if>
+            <if test="img != null">`img` = #{img}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from category
+        where id = #{id}
+    </delete>
+
+</mapper>

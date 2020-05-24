@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.ScoreRuleDao">
+
+    <select id="findById" resultType="com.model.ScoreRule">
+        select `id`, `rule_name`, `use_score`
+        from score_rule
+        where id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="com.model.ScoreRule">
+        select `id`,`rule_name`,`use_score` from score_rule
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="ruleName != null and ruleName != ''">
+                and rule_name = #{ruleName}
+            </if>
+            <if test="useScore != null and useScore != ''">
+                and use_score = #{useScore}
+            </if>
+        </where>
+    </select>
+
+    <select id="list" resultType="com.model.ScoreRule">
+        select `id`,`rule_name`,`use_score` from score_rule
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="ruleName != null and ruleName != ''">and rule_name =
+                #{ruleName}
+            </if>
+            <if test="useScore != null and useScore != ''">and use_score =
+                #{useScore}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.model.ScoreRule" useGeneratedKeys="true" keyProperty="id">
+        insert into score_rule(
+        <trim suffixOverrides=",">
+            <if test="ruleName != null">`rule_name`,</if>
+            <if test="useScore != null">`use_score`</if>
+        </trim>
+        )
+        values (
+        <trim suffixOverrides=",">
+            <if test="ruleName != null">#{ruleName},</if>
+            <if test="useScore != null">#{useScore}</if>
+        </trim>
+        )
+    </insert>
+
+    <update id="update" parameterType="com.model.ScoreRule">
+        update score_rule
+        <set>
+            <if test="ruleName != null">`rule_name` = #{ruleName}
+                ,
+            </if>
+            <if test="useScore != null">`use_score` = #{useScore}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from score_rule
+        where id = #{id}
+    </delete>
+
+</mapper>

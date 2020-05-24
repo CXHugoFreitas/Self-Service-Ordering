@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.DeskDao">
+
+    <select id="findById" resultType="com.model.Desk">
+        select `id`, `desk_no`, `status`
+        from desk
+        where id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="com.model.Desk">
+        select `id`,`desk_no`,`status` from desk
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="deskNo != null and deskNo != ''">
+                and desk_no = #{deskNo}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="list" resultType="com.model.Desk">
+        select `id`,`desk_no`,`status` from desk
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="deskNo != null and deskNo != ''">and desk_no =
+                #{deskNo}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.model.Desk" useGeneratedKeys="true" keyProperty="id">
+        insert into desk(
+        <trim suffixOverrides=",">
+            <if test="deskNo != null">`desk_no`,</if>
+            <if test="status != null">`status`</if>
+        </trim>
+        )
+        values (
+        <trim suffixOverrides=",">
+            <if test="deskNo != null">#{deskNo},</if>
+            <if test="status != null">#{status}</if>
+        </trim>
+        )
+    </insert>
+
+    <update id="update" parameterType="com.model.Desk">
+        update desk
+        <set>
+            <if test="deskNo != null">`desk_no` = #{deskNo}
+                ,
+            </if>
+            <if test="status != null">`status` = #{status}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from desk
+        where id = #{id}
+    </delete>
+
+</mapper>
