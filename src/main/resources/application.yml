@@ -12,6 +12,9 @@ spring:
 #port
 server:
   port: 9013
+  servlet:
+    session:
+      timeout: -1
 # mybatis
 mybatis:
   mapper-locations: classpath:/mapper/*.xml

@@ -19,8 +19,8 @@
             <div class="layui-card">
                 <div class="layui-card-body ">
                     <blockquote class="layui-elem-quote">欢迎【<span style="color: blue"
-                                                                  th:if="${session.USER.roleId == 1}">管理员</span><span
-                            style="color: blue" th:if="${session.USER.roleId == 2}">小区物业</span>】：
+                                                                  th:if="${session.USER.roleId == 1}">商家</span><span
+                            style="color: blue" th:if="${session.USER.roleId == 2}">用户</span>】：
                         <span class="x-red" th:text="${session.USER.name}">test</span>！
                     </blockquote>
                 </div>
@@ -30,19 +30,94 @@
 </div>
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15" id="vmUserDetail">
-        <div class="layui-col-md12">
+        <div class="layui-col-md6">
             <div class="layui-card">
-                <div class="layui-card">
-                    <div class="layui-card-header">
-                        <span style="font-size: 16px;font-weight: bold">项目介绍</span>
-                    </div>
-                    <div class="layui-card-body" style="padding-top: 30px; height: 300px; font-size: 18px">
-                        由于物业管理制度在我国还不够规范，物业管理涉及的范围较为广泛，管理内容繁杂，加上政策性变动因素，日常工作中需要耗费大量人力和物力，为了提高物业管理公司的管理水平提高工作效率，必须对物业管理的各项工作进行规范化管理，如人事管理制度规范化、工程设备检修保养运行记录规范化、保洁绿化工作规范化等；只有做到各种工作规范化，才可以通过规范化操作对员工工作进行指导，提高员工工作效率与技能，并且为减少人事变动给公司带来损失与降低新员工的培训成本；规范化的手段多种多样，如员工工作手册、ISO9000质量认证体系等，而采取现代计算机管理手段是一种行之有效的解决方法，越来越多的物业管理公司走上了信息化的道路，通过适合公司情况的物业管理软件来协助物业公司进行规范化、精细化的管理，来实现提高整体的管理水平。
-                    </div>
+                <div class="layui-card-header">
+                    <span style="font-size: 16px;font-weight: bold">项目介绍</span>
+                </div>
+                <div class="layui-card-body" style="padding-top: 30px; height: 300px; font-size: 18px">
+                    智能点餐系统通过高清液晶屏幕为顾客展示菜品，可代替传统菜单和低端“点菜宝”产品，提供更多更强的服务。其中图片、文字、音视频等方式可以全面地展现菜系特点，是实现智能化餐饮的前提和基础。随着科技的发展各行各业都在发生着翻天覆地的变化，餐饮行业同样如此，细心的朋友可能会发现，现在许多饭店、酒店在点菜的时候都已经不再是像过去那样拿着笔在纸上记了，而是拿着一个类似手机的东西点来点去。
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <span style="font-size: 16px;font-weight: bold">个人信息</span>
+                </div>
+                <div class="layui-card-body" style="padding-top: 30px; height: 300px">
+                    <form class="layui-form">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                用户名
+                            </label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                                    <div style="line-height: 38px" v-text="user.name"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                电话
+                            </label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                                    <div style="line-height: 38px" v-text="user.phone"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">
+                                积分
+                            </label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                                    <div style="line-height: 38px" v-text="user.score"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 </body>
+<script charset="UTF-8" th:inline="javascript" type="text/javascript">
+    var viewUser = [[${session.USER}]];
+    vm = new Vue({
+        el: "#vmUserDetail",
+        data: {
+            user: {}
+        },
+        methods: {},
+        created: function () {
+            var _this = this;
+            $.ajax({
+                url: "/user/findById",
+                data: {
+                    "id": viewUser.id
+                },
+                dataType: "json",
+                type: "get",
+                success: function (result) {
+                    if (result.code === 200) {
+                        _this.user = result.data;
+                    } else {
+                        layer.alert("获取用户信息失败！");
+                    }
+                }
+            });
+
+        }
+    });
+    layui.use(['form', 'layer', 'laydate'], function () {
+
+        var form = layui.form,
+            layer = layui.layer,
+            laydate = layui.laydate;
+
+    });
+</script>
 </html>

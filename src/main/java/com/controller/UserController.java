@@ -49,6 +49,21 @@ public class UserController {
         session.invalidate();
     }
 
+    @RequestMapping("/register")
+    public ResultVO register(@RequestBody User user, HttpSession session) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", user.getName());
+        User findUser = userService.findByMap(map);
+        if (findUser != null) {
+            return ResultVOUtil.failure(ResultFailureEnum.REGISTER_ERROR);
+        } else {
+            userService.save(user);
+            session.setAttribute("USER", user);
+            return ResultVOUtil.success();
+        }
+
+    }
+
     /**
      * 查询用户页面
      *

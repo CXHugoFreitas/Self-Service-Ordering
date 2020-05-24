@@ -68,8 +68,9 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public int save(Category category) {
-        int cateId = categoryDao.save(category);
+        categoryDao.save(category);
 
+        int cateId =  category.getId();
         //默认添加小份数量
         Dish smallDish = new Dish();
         smallDish.setCateId(cateId);
@@ -110,6 +111,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public int deleteById(Integer id) {
+        dishDao.deleteByCateId(id);
         return categoryDao.deleteById(id);
     }
 

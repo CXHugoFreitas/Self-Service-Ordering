@@ -16,34 +16,32 @@
 <body>
 <div class="layui-fluid">
     <div class="layui-row">
-        <form class="layui-form">
+<!--        <form  class="layui-form" action="/saveCate" enctype="multipart/form-data" method="post">-->
+        <form  class="layui-form">
             <div class="layui-form-item">
                 <label class="layui-form-label" for="cateName">
                     <span class="x-red">*</span>种类名称
                 </label>
                 <div class="layui-input-block">
                     <div class="layui-input-inline layui-show-xs-block">
-
                         <input class="layui-input" id="cateName" name="cateName"
                                type="text">
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item">
+            <!--<div class="layui-form-item">
                 <label class="layui-form-label" for="img">
                     <span class="x-red">*</span>图片
                 </label>
                 <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-
-                        <input class="layui-input" id="img" name="img"
-                               type="text">
+                    <div class="layui-input-inline layui-show-xs-block" style="margin-top: 7px">
+                        <input class="" id="img" lay-verify="required" name="img" type="file">
                     </div>
                 </div>
-            </div>
+            </div>-->
             <div class="layui-form-item">
                 <label class="layui-form-label"></label>
-                <button class="layui-btn" lay-filter="add" lay-submit="">
+                <button class="layui-btn" id="add" lay-filter="add" lay-submit="">
                     确认添加
                 </button>
             </div>
@@ -52,10 +50,11 @@
 </div>
 <script charset="UTF-8" type="text/javascript">
 
-    layui.use(['form', 'layer'],
+    layui.use(['form', 'layer', 'upload'],
         function () {
             var form = layui.form,
-                layer = layui.layer;
+                layer = layui.layer,
+                upload = layui.upload;
 
             //监听提交
             form.on('submit(add)',

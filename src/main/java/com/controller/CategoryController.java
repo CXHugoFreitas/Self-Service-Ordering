@@ -63,6 +63,35 @@ public class CategoryController {
     /**
      * 添加菜的种类
      */
+    /*@PostMapping("/save")
+    public ResultVO save(@RequestParam("img") MultipartFile file, @RequestParam("cateName") String cateName) {
+        try {
+            Category category = new Category();
+            category.setCateName(cateName);
+
+            String fileName = file.getOriginalFilename();
+
+            if (fileName.endsWith(".gif")) {
+                fileName = UUID.randomUUID() + ".gif";
+            } else if (fileName.endsWith(".jpg")) {
+                fileName = UUID.randomUUID() + ".jpg";
+            } else if (fileName.endsWith(".png")) {
+                fileName = UUID.randomUUID() + ".png";
+            } else if (fileName.endsWith(".jpeg")) {
+                fileName = UUID.randomUUID() + ".jpeg";
+            } else {
+                return ResultVOUtil.failure("图片格式不支持！");
+            }
+
+            //文件上传
+            FileUtil.uploadFile(fileName.getBytes(), FileUtil.UPLOAD_PATH + fileName);
+            category.setImg(fileName);
+            categoryService.save(category);
+            return ResultVOUtil.success();
+        } catch (Exception ex) {
+            return ResultVOUtil.failure("添加失败！");
+        }
+    }*/
     @PostMapping("/save")
     public ResultVO save(@RequestBody Category category) {
         try {

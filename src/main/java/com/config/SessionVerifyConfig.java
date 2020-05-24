@@ -22,8 +22,10 @@ public class SessionVerifyConfig implements WebMvcConfigurer {
 
         List<String> patterns = new ArrayList<>();
         patterns.add("/login");
+        patterns.add("/register");
         patterns.add("/user/login");
         patterns.add("/user/loginOut");
+        patterns.add("/user/register");
         patterns.add("/");
         patterns.add("/static/**");
         patterns.add("/css/**");

@@ -2,7 +2,7 @@
 <html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>订单管理</title>
+    <title>积分兑换</title>
     <meta content="webkit" name="renderer">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
@@ -26,57 +26,34 @@
 </div>
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
-        <div class="layui-col-md12" id="vmOrder">
+        <div class="layui-col-md12" id="vmScoreRule">
             <div class="layui-card">
+
                 <div class="layui-card-body">
                     <table class="layui-table layui-form">
                         <thead>
                         <tr>
                             <th>序号</th>
-                            <th>用户名</th>
-                            <th>餐桌编号</th>
-                            <th>菜品分类</th>
-                            <th>分量</th>
-                            <th>数量</th>
-                            <th>单价</th>
-                            <th>总价</th>
-                            <th>支付方式</th>
-                            <th>支付状态</th>
-                            <th>下单时间</th>
+                            <th>积分规则</th>
+                            <th>消耗积分</th>
                             <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="order,i in pageInfo.list">
+                        <tr v-for="scoreRule,i in pageInfo.list">
                             <td v-text="i+1"></td>
-                            <td v-text="order.userName"></td>
-                            <td v-text="order.deskNo"></td>
-                            <td v-text="order.cateName"></td>
-                            <td v-text="order.size"></td>
-                            <td v-text="order.num"></td>
-                            <td v-text="order.price"></td>
-                            <td v-text="order.amount"></td>
-                            <td>
-                                <template v-if="order.payType == 1">微信</template>
-                                <template v-if="order.payType == 2">支付宝</template>
-                                <template v-if="order.payType == 3">银行卡</template>
-                                <template v-if="order.payType == 4">现金</template>
-                                <template v-if="order.payType == 5">其他方式</template>
-                            </td>
-                            <td style="color: #FFB800" v-if="order.status === 0">未支付</td>
-                            <td style="color: green" v-if="order.status === 1">已支付</td>
-                            <td v-text="order.createTime"></td>
+                            <td v-text="scoreRule.ruleName"></td>
+                            <td v-text="scoreRule.useScore"></td>
                             <td class="td-manage">
-                                <button @click="delOrder(order.id)"
-                                        class="layui-btn layui-btn-danger"
-                                        id="delOrder"
-                                        v-if="order.status === 1">
-                                    <i class="layui-icon">&#xe640;</i>删除
+                                <button @click="useScore(scoreRule.useScore)"
+                                        class="layui-btn layui-btn-warm"
+                                        id="useScore">
+                                    <i class="layui-icon"></i>积分兑换
                                 </button>
                             </td>
                         </tr>
                         <tr v-if="pageInfo.total == 0">
-                            <td colspan="100" style="text-align: center">暂无订单信息！</td>
+                            <td colspan="100" style="text-align: center">暂无积分规则信息！</td>
                         </tr>
                         </tbody>
                     </table>
@@ -108,20 +85,18 @@
     </div>
 </div>
 </body>
-<script type="text/javascript">
-
-    layui.use(['form'], function () {
-    });
+<script th:inline="javascript" type="text/javascript">
+    var sessionUser = [[${session.USER}]];
 
     vm = new Vue({
-        el: "#vmOrder",
+        el: "#vmScoreRule",
         data: {
             pageInfo: {}
         },
         methods: {
             getPage: function (pageNum, pageSize) {
                 var _this = this;
-                var url = "/order/page?pageNum=" + pageNum;
+                var url = "/scoreRule/page?pageNum=" + pageNum;
 
                 if (!pageSize) {
                     url += "&pageSize=" + _this.pageInfo.pageSize;
@@ -134,49 +109,52 @@
                 });
             },
             /**
-             * 删除订单
+             * 兑换积分
              */
-            delOrder: function (id) {
-                layer.confirm('确认要删除吗？',
+            useScore: function (score) {
+
+                if (sessionUser.score - score < 0) {
+                    layer.alert('积分不足，无法兑换商品！');
+                    return false;
+                }
+
+                layer.confirm('确认要兑换吗？',
                     function () {
-                        //发异步删除数据
+
+                        var user = {};
+                        user.id = sessionUser.id;
+                        user.score = sessionUser.score - score;
+
+                        //发异步，把数据提交给controller
                         $.ajax({
-                            url: "/order/deleteById",
-                            data: {
-                                id: id
-                            },
+                            url: "user/update",
+                            data: JSON.stringify(user),
                             dataType: "json",
-                            type: "delete",
+                            contentType: "application/json",
+                            type: "put",
                             success: function (result) {
                                 if (result.code === 200) {
-                                    layer.msg('删除成功', {
-                                        icon: 1,
-                                        time: 1000
-                                    });
-                                    setTimeout(function () {
-                                        window.location.reload();
-                                    }, 1000);
+                                    layer.msg("兑换成功！", {icon: 6, time: 500},
+                                        function () {
+                                            location.reload();
+                                        });
                                 } else {
-                                    layer.alert(result.msg, {icon: 5});
+                                    layer.alert(result.msg);
                                 }
                             }
                         });
 
                     });
-            },
-            /**
-             *
-             * 修改订单
-             */
-            editOrder: function (editOrderId) {
-                //把要修改的editOrderId存到sessionStorage中
-                sessionStorage.setItem("editOrderId", editOrderId);
             }
         },
         created: function () {
             this.getPage(1, 5);
         }
     });
+
+    layui.use(['form'], function () {
+    });
+
 
 </script>
 </html>

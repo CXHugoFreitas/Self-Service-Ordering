@@ -2,7 +2,7 @@
 <html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>用户管理</title>
+    <title>我的点餐</title>
     <meta content="webkit" name="renderer">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
@@ -26,12 +26,12 @@
 </div>
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
-        <div class="layui-col-md12" id="vmUser">
+        <div class="layui-col-md12" id="vmOrder">
             <div class="layui-card">
 
                 <div class="layui-card-header">
-                    <button class="layui-btn" onclick="xadmin.open('添加用户','/userAdd',500,400)">
-                        <i class="layui-icon"></i>添加用户
+                    <button class="layui-btn" onclick="xadmin.open('下单点餐','/orderAdd',500,700)">
+                        <i class="layui-icon"></i>下单点餐
                     </button>
                 </div>
                 <div class="layui-card-body">
@@ -39,38 +39,57 @@
                         <thead>
                         <tr>
                             <th>序号</th>
-                            <th>用户名</th>
-                            <th>电话</th>
-                            <th>密码</th>
-                            <th>积分</th>
-                            <th>角色，1、用户 2、商家</th>
+                            <th>餐桌编号</th>
+                            <th>菜品分类</th>
+                            <th>分量</th>
+                            <th>数量</th>
+                            <th>单价</th>
+                            <th>总价</th>
+                            <th>支付方式</th>
+                            <th>支付状态</th>
+                            <th>下单时间</th>
                             <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="user,i in pageInfo.list">
+                        <tr v-for="order,i in pageInfo.list">
                             <td v-text="i+1"></td>
-                            <td v-text="user.name"></td>
-                            <td v-text="user.phone"></td>
-                            <td v-text="user.password"></td>
-                            <td v-text="user.score"></td>
-                            <td v-text="user.roleId"></td>
+                            <td v-text="order.deskNo"></td>
+                            <td v-text="order.cateName"></td>
+                            <td v-if="order.size === 1">小份</td>
+                            <td v-if="order.size === 2">中份</td>
+                            <td v-if="order.size === 3">大份</td>
+                            <td v-text="order.num"></td>
+                            <td v-text="order.price"></td>
+                            <td v-text="order.amount"></td>
+                            <td>
+                                <template v-if="order.payType == 1">微信</template>
+                                <template v-if="order.payType == 2">支付宝</template>
+                                <template v-if="order.payType == 3">银行卡</template>
+                                <template v-if="order.payType == 4">现金</template>
+                                <template v-if="order.payType == 5">其他方式</template>
+                            </td>
+                            <td style="color: #FFB800" v-if="order.status == 0">未支付</td>
+                            <td style="color: green" v-if="order.status == 1">已支付</td>
+                            <td v-text="order.createTime"></td>
                             <td class="td-manage">
-                                <button @click="editUser(user.id)"
+                                <button @click="editOrder(order.id)"
                                         class="layui-btn layui-btn-warm"
-                                        id="editUser"
-                                        onclick="xadmin.open('编辑用户','/userEdit',500,400)">
-                                    <i class="layui-icon">&#xe631;</i>编辑
+                                        id="editOrder"
+                                        onclick="xadmin.open('支付订单','/orderEdit',500,400)"
+                                        v-if="order.status === 0">
+                                    <i class="layui-icon">&#xe631;</i>支付
                                 </button>
-                                <button @click="delUser(user.id)"
+                                <button @click="delOrder(order.id)"
                                         class="layui-btn layui-btn-danger"
-                                        id="delUser">
+                                        id="delOrder"
+                                        v-if="order.status === 1">
                                     <i class="layui-icon">&#xe640;</i>删除
                                 </button>
                             </td>
                         </tr>
                         <tr v-if="pageInfo.total == 0">
-                            <td colspan="100" style="text-align: center">暂无用户信息！</td>
+                            <td colspan="100" style="text-align: center">暂无订单信息！</td>
                         </tr>
                         </tbody>
                     </table>
@@ -102,20 +121,22 @@
     </div>
 </div>
 </body>
-<script type="text/javascript">
+<script th:inline="javascript" type="text/javascript">
+
+    var sessionUser = [[${session.USER}]];
 
     layui.use(['form'], function () {
     });
 
     vm = new Vue({
-        el: "#vmUser",
+        el: "#vmOrder",
         data: {
             pageInfo: {}
         },
         methods: {
             getPage: function (pageNum, pageSize) {
                 var _this = this;
-                var url = "/user/page?pageNum=" + pageNum;
+                var url = "/order/page?pageNum=" + pageNum;
 
                 if (!pageSize) {
                     url += "&pageSize=" + _this.pageInfo.pageSize;
@@ -123,19 +144,21 @@
                     url += "&pageSize=" + pageSize;
                 }
 
+                url += "&userId=" + sessionUser.id;
+
                 $.getJSON(url, function (data) {
                     _this.pageInfo = data;
                 });
             },
             /**
-             * 删除用户
+             * 删除订单
              */
-            delUser: function (id) {
+            delOrder: function (id) {
                 layer.confirm('确认要删除吗？',
                     function () {
                         //发异步删除数据
                         $.ajax({
-                            url: "/user/deleteById",
+                            url: "/order/deleteById",
                             data: {
                                 id: id
                             },
@@ -160,11 +183,11 @@
             },
             /**
              *
-             * 修改用户
+             * 修改订单
              */
-            editUser: function (editUserId) {
-                //把要修改的editUserId存到sessionStorage中
-                sessionStorage.setItem("editUserId", editUserId);
+            editOrder: function (editOrderId) {
+                //把要修改的editOrderId存到sessionStorage中
+                sessionStorage.setItem("editOrderId", editOrderId);
             }
         },
         created: function () {

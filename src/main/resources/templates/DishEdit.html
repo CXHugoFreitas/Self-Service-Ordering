@@ -18,34 +18,12 @@
     <div class="layui-row">
         <form class="layui-form">
             <div class="layui-form-item">
-                <label class="layui-form-label" for="cateId">
-                    <span class="x-red">*</span>种类id
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="cateId" lay-verify="required" name="cateId" type="text"
-                               v-model="dish.cateId"></div>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="size">
-                    <span class="x-red">*</span>分量
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="size" lay-verify="required" name="size" type="text"
-                               v-model="dish.size"></div>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
                 <label class="layui-form-label" for="price">
                     <span class="x-red">*</span>单价
                 </label>
                 <div class="layui-input-block">
                     <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="price" lay-verify="required" name="price" type="text"
+                        <input class="layui-input" id="price" lay-verify="required" name="price" type="number"
                                v-model="dish.price"></div>
                 </div>
             </div>
@@ -56,7 +34,7 @@
                 </label>
                 <div class="layui-input-block">
                     <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="quantity" lay-verify="required" name="quantity" type="text"
+                        <input class="layui-input" id="quantity" lay-verify="required" name="quantity" type="number"
                                v-model="dish.quantity"></div>
                 </div>
             </div>

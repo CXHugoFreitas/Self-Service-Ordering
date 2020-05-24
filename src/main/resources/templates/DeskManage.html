@@ -30,7 +30,7 @@
             <div class="layui-card">
 
                 <div class="layui-card-header">
-                    <button class="layui-btn" onclick="xadmin.open('添加餐桌','/deskAdd',500,400)">
+                    <button class="layui-btn" onclick="xadmin.open('添加餐桌','/deskAdd',500,300)">
                         <i class="layui-icon"></i>添加餐桌
                     </button>
                 </div>
@@ -40,7 +40,7 @@
                         <tr>
                             <th>序号</th>
                             <th>编号</th>
-                            <th>状态，0、未占用 1、已占用</th>
+                            <th>状态</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -48,15 +48,16 @@
                         <tr v-for="desk,i in pageInfo.list">
                             <td v-text="i+1"></td>
                             <td v-text="desk.deskNo"></td>
-                            <td v-text="desk.status"></td>
+                            <td style="color: green" v-if="desk.status == 0">未占用</td>
+                            <td style="color: #FFB800" v-if="desk.status == 1">已占用</td>
                             <td class="td-manage">
                                 <button @click="editDesk(desk.id)"
                                         class="layui-btn layui-btn-warm"
                                         id="editDesk"
-                                        onclick="xadmin.open('编辑餐桌','/deskEdit',500,400)">
+                                        onclick="xadmin.open('编辑餐桌','/deskEdit',500,300)">
                                     <i class="layui-icon">&#xe631;</i>编辑
                                 </button>
-                                <button @click="delDesk(desk.id)"
+                                <button @click="delDesk(desk.id, desk.status)"
                                         class="layui-btn layui-btn-danger"
                                         id="delDesk">
                                     <i class="layui-icon">&#xe640;</i>删除
@@ -124,7 +125,13 @@
             /**
              * 删除餐桌
              */
-            delDesk: function (id) {
+            delDesk: function (id, status) {
+
+                if (status === 1) {
+                    layer.alert('正在使用的餐桌不能删除！', {icon: 5});
+                    return false;
+                }
+
                 layer.confirm('确认要删除吗？',
                     function () {
                         //发异步删除数据

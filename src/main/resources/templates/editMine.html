@@ -45,30 +45,19 @@
                 </label>
                 <div class="layui-input-block">
                     <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="password" lay-verify="required" name="password" type="text"
-                               v-model="user.password"></div>
+                        <input class="layui-input" id="password" lay-verify="required" name="password" type="password"
+                               :value="user.password"></div>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="score">
-                    <span class="x-red">*</span>积分
+                <label class="layui-form-label" for="password">
+                    <span class="x-red">*</span>确认密码
                 </label>
                 <div class="layui-input-block">
                     <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="score" lay-verify="required" name="score" type="text"
-                               v-model="user.score"></div>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="roleId">
-                    <span class="x-red">*</span>角色，1、用户 2、商家
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="roleId" lay-verify="required" name="roleId" type="text"
-                               v-model="user.roleId"></div>
+                        <input class="layui-input" id="rePassword" lay-verify="required" name="rePassword" type="password"
+                               :value="user.password"></div>
                 </div>
             </div>
 
@@ -81,9 +70,9 @@
         </form>
     </div>
 </div>
-<script charset="UTF-8" type="text/javascript">
+<script charset="UTF-8" th:inline="javascript" type="text/javascript">
 
-    var editUserId = sessionStorage.getItem("editUserId");
+    var sessionUser = [[${session.USER}]];
 
     vm = new Vue({
         el: "#vmUpdateUser",
@@ -96,7 +85,7 @@
             $.ajax({
                 url: "/user/findById",
                 data: {
-                    "id": editUserId
+                    "id": sessionUser.id
                 },
                 dataType: "json",
                 type: "get",
@@ -123,7 +112,12 @@
                 function (data) {
 
                     //组装数据
-                    data.field.id = editUserId;
+                    data.field.id = sessionUser.id;
+
+                    if (data.field.password !== data.field.rePassword) {
+                        layer.msg("请输入两次相同的密码！", {icon: 5});
+                        return false;
+                    }
 
                     //发异步，把数据提交给controller
                     $.ajax({

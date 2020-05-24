@@ -26,9 +26,19 @@ public class Order implements Serializable {
     private Integer userId;
 
     /**
+     * 用户名称
+     */
+    private String userName;
+
+    /**
      * 餐桌id
      */
     private Integer deskId;
+
+    /**
+     * 餐桌编号
+     */
+    private String deskNo;
 
     /**
      * 外送地址
@@ -39,6 +49,11 @@ public class Order implements Serializable {
      * 菜品分类id
      */
     private Integer cateId;
+
+    /**
+     * 菜品种类
+     */
+    private String cateName;
 
     /**
      * 分量
@@ -54,6 +69,11 @@ public class Order implements Serializable {
      * 单价
      */
     private Integer price;
+
+    /**
+     * 总价
+     */
+    private Integer amount;
 
     /**
      * 支付方式

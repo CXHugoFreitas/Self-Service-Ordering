@@ -38,7 +38,7 @@
         from dish a
         left join category s ON a.cate_id = s.id
         <where>
-            <if test="id != null and id != ''">and  a.id =
+            <if test="id != null and id != ''">and a.id =
                 #{id}
             </if>
             <if test="cateId != null and cateId != ''">and cate_id =
@@ -97,6 +97,11 @@
         delete
         from dish
         where id = #{id}
+    </delete>
+    <delete id="deleteByCateId">
+        delete
+        from dish
+        where cate_id = #{id}
     </delete>
 
 </mapper>

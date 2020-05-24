@@ -43,4 +43,8 @@ public interface DishDao {
      */
     int deleteById(Integer id);
 
+    /**
+     * 删除菜的数量根据分类
+     */
+    int deleteByCateId(Integer id);
 }

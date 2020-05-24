@@ -34,6 +34,8 @@
                 】<span
                     th:text="${session.USER.name}">admin</span></a>
             <dl class="layui-nav-child">
+                <dd><a onclick="xadmin.open('修改个人信息','/editMine',500,400)">修改个人信息</a></dd>
+                <dd>
                 <dd>
                     <a th:href="@{/loginOut}">退出</a></dd>
             </dl>
@@ -107,9 +109,35 @@
                     <i class="iconfont nav_right">&#xe697;</i></a>
                 <ul class="sub-menu" style="display: block;">
                     <li>
-                        <a onclick="xadmin.add_tab('我的点餐','orderManage')">
+                        <a onclick="xadmin.add_tab('我的点餐','orderList')">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>我的点餐</cite></a>
+                    </li>
+                </ul>
+            </li>
+            <li class="open" th:if="${session.USER.roleId == 2}">
+                <a href="javascript:void(0)">
+                    <i class="iconfont left-nav-li" lay-tips="活动中心">&#xe726;</i>
+                    <cite>活动中心</cite>
+                    <i class="iconfont nav_right">&#xe697;</i></a>
+                <ul class="sub-menu" style="display: block;">
+                    <li>
+                        <a onclick="xadmin.add_tab('活动中心','activityList')">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>活动中心</cite></a>
+                    </li>
+                </ul>
+            </li>
+            <li class="open" th:if="${session.USER.roleId == 2}">
+                <a href="javascript:void(0)">
+                    <i class="iconfont left-nav-li" lay-tips="积分兑换">&#xe726;</i>
+                    <cite>积分兑换</cite>
+                    <i class="iconfont nav_right">&#xe697;</i></a>
+                <ul class="sub-menu" style="display: block;">
+                    <li>
+                        <a onclick="xadmin.add_tab('活动中心','scoreRuleList')">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>积分兑换</cite></a>
                     </li>
                 </ul>
             </li>

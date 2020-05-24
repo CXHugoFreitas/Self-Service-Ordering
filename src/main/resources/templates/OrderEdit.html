@@ -17,71 +17,6 @@
 <div class="layui-fluid" id="vmUpdateOrder">
     <div class="layui-row">
         <form class="layui-form">
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="userId">
-                    <span class="x-red">*</span>用户id
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="userId" lay-verify="required" name="userId" type="text"
-                               v-model="order.userId"></div>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="deskId">
-                    <span class="x-red">*</span>餐桌id
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="deskId" lay-verify="required" name="deskId" type="text"
-                               v-model="order.deskId"></div>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="cateId">
-                    <span class="x-red">*</span>菜品分类id
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="cateId" lay-verify="required" name="cateId" type="text"
-                               v-model="order.cateId"></div>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="size">
-                    <span class="x-red">*</span>分量
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="size" lay-verify="required" name="size" type="text"
-                               v-model="order.size"></div>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="num">
-                    <span class="x-red">*</span>数量
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="num" lay-verify="required" name="num" type="text"
-                               v-model="order.num"></div>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="price">
-                    <span class="x-red">*</span>单价
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="price" lay-verify="required" name="price" type="text"
-                               v-model="order.price"></div>
-                </div>
-            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="payType">
@@ -89,35 +24,30 @@
                 </label>
                 <div class="layui-input-block">
                     <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="payType" lay-verify="required" name="payType" type="text"
-                               v-model="order.payType"></div>
+                        <select class="layui-input" id="payType" lay-verify="required" name="payType">
+                            <option value="1">微信</option>
+                            <option value="2">支付宝</option>
+                            <option value="3">银行卡</option>
+                            <option value="4">现金</option>
+                            <option value="5">其他</option>
+                        </select>
+                        <input :value="order.amount" name="amount" class="layui-input"  type="hidden">
+                    </div>
                 </div>
-            </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="status">
-                    <span class="x-red">*</span>支付状态 0、未支付 1、已支付
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="status" lay-verify="required" name="status" type="text"
-                               v-model="order.status"></div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <button class="layui-btn" lay-filter="edit" lay-submit="">
+                        确认支付
+                    </button>
                 </div>
-            </div>
-
-
-            <div class="layui-form-item">
-                <label class="layui-form-label"></label>
-                <button class="layui-btn" lay-filter="edit" lay-submit="">
-                    确认修改
-                </button>
-            </div>
         </form>
     </div>
 </div>
-<script charset="UTF-8" type="text/javascript">
+<script charset="UTF-8" th:inline="javascript" type="text/javascript">
 
     var editOrderId = sessionStorage.getItem("editOrderId");
+    var sessionUser = [[${session.USER}]];
 
     vm = new Vue({
         el: "#vmUpdateOrder",
@@ -158,6 +88,7 @@
 
                     //组装数据
                     data.field.id = editOrderId;
+                    data.field.status = 1;
 
                     //发异步，把数据提交给controller
                     $.ajax({
@@ -168,13 +99,52 @@
                         type: "put",
                         success: function (result) {
                             if (result.code === 200) {
-                                layer.msg("修改成功", {icon: 6, time: 500},
-                                    function () {
-                                        //关闭当前frame
-                                        xadmin.close();
-                                        // 可以对父窗口进行刷新
-                                        xadmin.father_reload();
-                                    });
+
+                                var user = {};
+                                user.id = sessionUser.id;
+                                user.score = parseInt(sessionUser.score || 0) + parseInt(data.field.amount);
+
+                                $.ajax({
+                                    url: "user/update",
+                                    data: JSON.stringify(user),
+                                    dataType: "json",
+                                    contentType: "application/json",
+                                    type: "put",
+                                    success: function (result) {
+                                        if (result.code === 200) {
+
+                                            var desk = {};
+
+                                            desk.id = data.field.deskId;
+                                            desk.status = 0;
+
+                                            $.ajax({
+                                                url: "user/update",
+                                                data: JSON.stringify(user),
+                                                dataType: "json",
+                                                contentType: "application/json",
+                                                type: "put",
+                                                success: function (result) {
+                                                    if (result.code === 200) {
+
+                                                        layer.msg("支付成功", {icon: 6, time: 500},
+                                                            function () {
+                                                                //关闭当前frame
+                                                                xadmin.close();
+                                                                // 可以对父窗口进行刷新
+                                                                xadmin.father_reload();
+                                                            });
+                                                    } else {
+                                                        layer.alert(result.msg);
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            layer.alert(result.msg);
+                                        }
+                                    }
+                                });
+
                             } else {
                                 layer.alert(result.msg);
                             }

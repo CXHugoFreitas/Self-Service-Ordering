@@ -2,7 +2,7 @@
 <html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>菜的种类管理</title>
+    <title>活动列表</title>
     <meta content="webkit" name="renderer">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
@@ -26,48 +26,23 @@
 </div>
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
-        <div class="layui-col-md12" id="vmCategory">
+        <div class="layui-col-md12" id="vmActivity">
             <div class="layui-card">
-
-                <div class="layui-card-header">
-                    <button class="layui-btn" onclick="xadmin.open('添加菜的种类','/categoryAdd',500,400)">
-                        <i class="layui-icon"></i>添加菜的种类
-                    </button>
-                </div>
                 <div class="layui-card-body">
                     <table class="layui-table layui-form">
                         <thead>
                         <tr>
                             <th>序号</th>
-                            <th>种类名称</th>
-<!--                            <th>图片</th>-->
-                            <th>操作</th>
+                            <th>活动名称</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="category,i in pageInfo.list">
+                        <tr v-for="activity,i in pageInfo.list">
                             <td v-text="i+1"></td>
-                            <td v-text="category.cateName"></td>
-                            <!--<td>
-                                <img :src="'/../static/upload/'+category.img"/>
-                                <img th:src="@{../static/upload/95adddf1-01c7-4fa3-8121-f1c318b81325.jpg}"/>
-                            </td>-->
-                            <td class="td-manage">
-                                <button @click="editCategory(category.id)"
-                                        class="layui-btn layui-btn-warm"
-                                        id="editCategory"
-                                        onclick="xadmin.open('编辑菜的种类','/categoryEdit',500,400)">
-                                    <i class="layui-icon">&#xe631;</i>编辑
-                                </button>
-                                <button @click="delCategory(category.id)"
-                                        class="layui-btn layui-btn-danger"
-                                        id="delCategory">
-                                    <i class="layui-icon">&#xe640;</i>删除
-                                </button>
-                            </td>
+                            <td v-text="activity.name"></td>
                         </tr>
                         <tr v-if="pageInfo.total == 0">
-                            <td colspan="100" style="text-align: center">暂无菜的种类信息！</td>
+                            <td colspan="100" style="text-align: center">暂无活动信息！</td>
                         </tr>
                         </tbody>
                     </table>
@@ -105,14 +80,14 @@
     });
 
     vm = new Vue({
-        el: "#vmCategory",
+        el: "#vmActivity",
         data: {
             pageInfo: {}
         },
         methods: {
             getPage: function (pageNum, pageSize) {
                 var _this = this;
-                var url = "/category/page?pageNum=" + pageNum;
+                var url = "/activity/page?pageNum=" + pageNum;
 
                 if (!pageSize) {
                     url += "&pageSize=" + _this.pageInfo.pageSize;
@@ -123,45 +98,6 @@
                 $.getJSON(url, function (data) {
                     _this.pageInfo = data;
                 });
-            },
-            /**
-             * 删除菜的种类
-             */
-            delCategory: function (id) {
-                layer.confirm('确认要删除吗？',
-                    function () {
-                        //发异步删除数据
-                        $.ajax({
-                            url: "/category/deleteById",
-                            data: {
-                                id: id
-                            },
-                            dataType: "json",
-                            type: "delete",
-                            success: function (result) {
-                                if (result.code === 200) {
-                                    layer.msg('删除成功', {
-                                        icon: 1,
-                                        time: 1000
-                                    });
-                                    setTimeout(function () {
-                                        window.location.reload();
-                                    }, 1000);
-                                } else {
-                                    layer.alert(result.msg, {icon: 5});
-                                }
-                            }
-                        });
-
-                    });
-            },
-            /**
-             *
-             * 修改菜的种类
-             */
-            editCategory: function (editCategoryId) {
-                //把要修改的editCategoryId存到sessionStorage中
-                sessionStorage.setItem("editCategoryId", editCategoryId);
             }
         },
         created: function () {
