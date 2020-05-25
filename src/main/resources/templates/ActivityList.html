@@ -34,12 +34,14 @@
                         <tr>
                             <th>序号</th>
                             <th>活动名称</th>
+                            <th>活动内容</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr v-for="activity,i in pageInfo.list">
                             <td v-text="i+1"></td>
                             <td v-text="activity.name"></td>
+                            <td v-text="activity.content"></td>
                         </tr>
                         <tr v-if="pageInfo.total == 0">
                             <td colspan="100" style="text-align: center">暂无活动信息！</td>

@@ -40,6 +40,7 @@
                         <tr>
                             <th>序号</th>
                             <th>活动名称</th>
+                            <th>活动内容</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -47,6 +48,7 @@
                         <tr v-for="activity,i in pageInfo.list">
                             <td v-text="i+1"></td>
                             <td v-text="activity.name"></td>
+                            <td v-text="activity.content"></td>
                             <td class="td-manage">
                                 <button @click="editActivity(activity.id)"
                                         class="layui-btn layui-btn-warm"

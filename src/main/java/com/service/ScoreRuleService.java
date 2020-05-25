@@ -1,7 +1,7 @@
 package com.service;
 
-import com.model.ScoreRule;
 import com.github.pagehelper.PageInfo;
+import com.model.ScoreRule;
 import com.utils.RequestParamsUtil;
 
 import java.util.List;

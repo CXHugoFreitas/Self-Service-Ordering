@@ -64,66 +64,6 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label" for="cateId">
-                    <span class="x-red">*</span>菜品种类
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <select id="cateId" lay-filter="selectDish" lay-verify="required" name="cateId">
-                            <option :value="category.id" v-for="category,index in categoryList">{{category.cateName}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="size">
-                    <span class="x-red">*</span>分量
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <select id="size" lay-filter="selectDish" lay-verify="required" name="size">
-                            <option value="1">小份</option>
-                            <option value="2">中份</option>
-                            <option value="3">大份</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="num">
-                    <span class="x-red">*</span>数量
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="num" name="num"
-                               type="number">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="price">
-                    <span class="x-red">*</span>单价
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="price" name="price" readonly
-                               type="number">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="amount">
-                    <span class="x-red">*</span>总价
-                </label>
-                <div class="layui-input-block">
-                    <div class="layui-input-inline layui-show-xs-block">
-                        <input class="layui-input" id="amount" name="amount" readonly
-                               type="number">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
                 <label class="layui-form-label"></label>
                 <button class="layui-btn" lay-filter="add" lay-submit="">
                     确认添加
@@ -180,9 +120,9 @@
             var form = layui.form,
                 layer = layui.layer;
 
-
+            var val = 1;
             form.on('select(selectType)', function (data) {
-                var val = data.value;
+                val = data.value;
 
                 if (val == 1) {
                     $(".in").show();
@@ -195,43 +135,18 @@
                 }
 
             });
-
-            form.on('select(selectDish)', function (data) {
-                var size = $("[name=size]").val();
-                var cateId = $("[name=cateId]").val();
-
-                $.ajax({
-                    url: "/dish/findByMap",
-                    data: {
-                        cateId: cateId,
-                        size: size
-                    },
-                    dataType: "json",
-                    type: "get",
-                    success: function (result) {
-                        if (result.code === 200) {
-                            var dish = result.data;
-                            $("[name=price]").val(dish.price);
-                            var num = $("#num").val();
-                            var price = $("[name=price]").val();
-                            $("[name=amount]").val(num * price || 0);
-                        } else {
-                            layer.alert("获取信息失败！");
-                        }
-                    }
-                });
-            });
-
-            $("#num").keyup(function () {
-                var num = $("#num").val();
-                var price = $("[name=price]").val();
-                $("[name=amount]").val(num * price);
-            });
+            console.info("nihk" + val)
 
             //监听提交
             form.on('submit(add)',
                 function (data) {
                     data.field.userId = sessionUser.id;
+
+                    if (val == 1) {
+                        data.field.address = null;
+                    } else {
+                        data.field.deskId = null;
+                    }
 
                     //发异步，把数据提交给java
                     $.ajax({
@@ -242,30 +157,40 @@
                         contentType: "application/json",
                         success: function (result) {
                             if (result.code === 200) {
-                                var desk = {};
-                                desk.id = data.field.deskId;
-                                desk.status = 1;
-                                $.ajax({
-                                    url: "desk/update",
-                                    data: JSON.stringify(desk),
-                                    dataType: "json",
-                                    contentType: "application/json",
-                                    type: "put",
-                                    success: function (result) {
-                                        if (result.code === 200) {
-                                            layer.msg("增加成功", {icon: 6, time: 500},
-                                                function () {
-                                                    //关闭当前frame
-                                                    xadmin.close();
-                                                    // 可以对父窗口进行刷新
-                                                    xadmin.father_reload();
-                                                });
-                                        } else {
-                                            layer.alert(result.msg);
-                                        }
-                                    }
-                                });
 
+                                if (val == 1) {
+                                    var desk = {};
+                                    desk.id = data.field.deskId;
+                                    desk.status = 1;
+                                    $.ajax({
+                                        url: "desk/update",
+                                        data: JSON.stringify(desk),
+                                        dataType: "json",
+                                        contentType: "application/json",
+                                        type: "put",
+                                        success: function (result) {
+                                            if (result.code === 200) {
+                                                layer.msg("增加成功", {icon: 6, time: 500},
+                                                    function () {
+                                                        //关闭当前frame
+                                                        xadmin.close();
+                                                        // 可以对父窗口进行刷新
+                                                        xadmin.father_reload();
+                                                    });
+                                            } else {
+                                                layer.alert(result.msg);
+                                            }
+                                        }
+                                    });
+                                }else{
+                                    layer.msg("增加成功", {icon: 6, time: 500},
+                                        function () {
+                                            //关闭当前frame
+                                            xadmin.close();
+                                            // 可以对父窗口进行刷新
+                                            xadmin.father_reload();
+                                        });
+                                }
                             } else {
                                 layer.alert(result.msg);
                             }

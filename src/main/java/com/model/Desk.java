@@ -1,9 +1,8 @@
 package com.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 餐桌

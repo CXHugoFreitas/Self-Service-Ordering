@@ -1,9 +1,8 @@
 package com.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 菜的种类
@@ -24,11 +23,5 @@ public class Category implements Serializable {
      * 种类名称
      */
     private String cateName;
-
-    /**
-     * 图片
-     */
-    private String img;
-
 
 }

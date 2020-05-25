@@ -10,11 +10,6 @@
                desk_id,
                d.desk_no,
                address,
-               cate_id,
-               c.cate_name,
-               size,
-               num,
-               price,
                amount,
                pay_type,
                a.status,
@@ -22,7 +17,6 @@
         from `order` a
                  left join user u on a.user_id = u.id
                  left join desk d on a.desk_id = d.id
-                 left join category c ON c.id = a.cate_id
         where a.id = #{id}
     </select>
 
@@ -33,11 +27,6 @@
         desk_id,
         d.desk_no,
         address,
-        cate_id,
-        c.cate_name,
-        size,
-        num,
-        price,
         amount,
         pay_type,
         a.status,
@@ -45,7 +34,6 @@
         from `order` a
         left join user u on a.user_id = u.id
         left join desk d on a.desk_id = d.id
-        left join category c ON c.id = a.cate_id
         <where>
             <if test="id != null and id != ''">
                 and a.id = #{id}
@@ -55,18 +43,6 @@
             </if>
             <if test="deskId != null and deskId != ''">
                 and desk_id = #{deskId}
-            </if>
-            <if test="cateId != null and cateId != ''">
-                and cate_id = #{cateId}
-            </if>
-            <if test="size != null and size != ''">
-                and size = #{size}
-            </if>
-            <if test="num != null and num != ''">
-                and num = #{num}
-            </if>
-            <if test="price != null and price != ''">
-                and price = #{price}
             </if>
             <if test="payType != null and payType != ''">
                 and pay_type = #{payType}
@@ -87,11 +63,6 @@
         desk_id,
         d.desk_no,
         address,
-        cate_id,
-        c.cate_name,
-        size,
-        num,
-        price,
         amount,
         pay_type,
         a.status,
@@ -99,7 +70,6 @@
         from `order` a
         left join user u on a.user_id = u.id
         left join desk d on a.desk_id = d.id
-        left join category c ON c.id = a.cate_id
         <where>
             <if test="id != null and id != ''">and a.id =
                 #{id}
@@ -109,18 +79,6 @@
             </if>
             <if test="deskId != null and deskId != ''">and desk_id =
                 #{deskId}
-            </if>
-            <if test="cateId != null and cateId != ''">and cate_id =
-                #{cateId}
-            </if>
-            <if test="size != null and size != ''">and size =
-                #{size}
-            </if>
-            <if test="num != null and num != ''">and num =
-                #{num}
-            </if>
-            <if test="price != null and price != ''">and price =
-                #{price}
             </if>
             <if test="payType != null and payType != ''">and pay_type =
                 #{payType}
@@ -142,10 +100,6 @@
         <trim suffixOverrides=",">
             <if test="userId != null">`user_id`,</if>
             <if test="deskId != null">`desk_id`,</if>
-            <if test="cateId != null">`cate_id`,</if>
-            <if test="size != null">`size`,</if>
-            <if test="num != null">`num`,</if>
-            <if test="price != null">`price`,</if>
             <if test="payType != null">`pay_type`,</if>
             <if test="status != null">`status`,</if>
             <if test="address != null">`address`,</if>
@@ -157,10 +111,6 @@
         <trim suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
             <if test="deskId != null">#{deskId},</if>
-            <if test="cateId != null">#{cateId},</if>
-            <if test="size != null">#{size},</if>
-            <if test="num != null">#{num},</if>
-            <if test="price != null">#{price},</if>
             <if test="payType != null">#{payType},</if>
             <if test="status != null">#{status},</if>
             <if test="address != null">#{address},</if>
@@ -177,18 +127,6 @@
                 ,
             </if>
             <if test="deskId != null">`desk_id` = #{deskId}
-                ,
-            </if>
-            <if test="cateId != null">`cate_id` = #{cateId}
-                ,
-            </if>
-            <if test="size != null">`size` = #{size}
-                ,
-            </if>
-            <if test="num != null">`num` = #{num}
-                ,
-            </if>
-            <if test="price != null">`price` = #{price}
                 ,
             </if>
             <if test="amount != null">`amount` = #{amount}

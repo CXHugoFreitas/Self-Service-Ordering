@@ -5,27 +5,31 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 菜的数量
+ * 订单详情
  *
  * @author Clrvn
  */
 @Data
-public class Dish implements Serializable {
+public class OrderDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 主键自增id
+     * 主键id
      */
     private Integer id;
+    /**
+     * 订单id
+     */
+    private Integer orderId;
 
     /**
-     * 种类id
+     * 菜品分类id
      */
     private Integer cateId;
 
     /**
-     * 种类名称
+     * 菜品种类
      */
     private String cateName;
 
@@ -35,15 +39,19 @@ public class Dish implements Serializable {
     private Integer size;
 
     /**
+     * 数量
+     */
+    private Integer num;
+
+    /**
      * 单价
      */
     private Integer price;
 
-
     /**
-     * 数量
+     * 总价
      */
-    private Integer quantity;
+    private Integer amount;
 
 
 }

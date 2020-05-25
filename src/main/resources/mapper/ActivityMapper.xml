@@ -4,13 +4,13 @@
 <mapper namespace="com.dao.ActivityDao">
 
     <select id="findById" resultType="com.model.Activity">
-        select `id`, `name`
+        select `id`, `name`, `content`
         from activity
         where id = #{id}
     </select>
 
     <select id="findByMap" resultType="com.model.Activity">
-        select `id`,`name` from activity
+        select `id`, `name`, `content` from activity
         <where>
             <if test="id != null and id != ''">
                 and id = #{id}
@@ -18,11 +18,14 @@
             <if test="name != null and name != ''">
                 and name = #{name}
             </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
         </where>
     </select>
 
     <select id="list" resultType="com.model.Activity">
-        select `id`,`name` from activity
+        select `id`, `name`, `content` from activity
         <where>
             <if test="id != null and id != ''">and id =
                 #{id}
@@ -36,12 +39,14 @@
     <insert id="save" parameterType="com.model.Activity" useGeneratedKeys="true" keyProperty="id">
         insert into activity(
         <trim suffixOverrides=",">
-            <if test="name != null">`name`</if>
+            <if test="name != null">`name`,</if>
+            <if test="content != null">`content`</if>
         </trim>
         )
         values (
         <trim suffixOverrides=",">
-            <if test="name != null">#{name}</if>
+            <if test="name != null">#{name},</if>
+            <if test="content != null">#{content}</if>
         </trim>
         )
     </insert>
@@ -49,7 +54,9 @@
     <update id="update" parameterType="com.model.Activity">
         update activity
         <set>
-            <if test="name != null">`name` = #{name}
+            <if test="name != null">`name` = #{name},
+            </if>
+            <if test="content != null">`content` = #{content}
             </if>
         </set>
         where id = #{id}

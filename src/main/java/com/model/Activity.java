@@ -1,9 +1,8 @@
 package com.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 活动
@@ -24,6 +23,10 @@ public class Activity implements Serializable {
      * 活动名称
      */
     private String name;
+    /**
+     * 活动内容
+     */
+    private String content;
 
 
 }

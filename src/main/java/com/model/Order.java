@@ -1,9 +1,9 @@
 package com.model;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import lombok.Data;
 
 /**
  * 订单
@@ -49,26 +49,6 @@ public class Order implements Serializable {
      * 菜品分类id
      */
     private Integer cateId;
-
-    /**
-     * 菜品种类
-     */
-    private String cateName;
-
-    /**
-     * 分量
-     */
-    private Integer size;
-
-    /**
-     * 数量
-     */
-    private Integer num;
-
-    /**
-     * 单价
-     */
-    private Integer price;
 
     /**
      * 总价

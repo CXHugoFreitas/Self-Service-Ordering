@@ -31,7 +31,7 @@
                             <option value="4">现金</option>
                             <option value="5">其他</option>
                         </select>
-                        <input :value="order.amount" name="amount" class="layui-input"  type="hidden">
+                        <input :value="order.amount" class="layui-input" name="amount" type="hidden">
                     </div>
                 </div>
 
@@ -49,6 +49,7 @@
     var editOrderId = sessionStorage.getItem("editOrderId");
     var sessionUser = [[${session.USER}]];
 
+    var updateOrder = {};
     vm = new Vue({
         el: "#vmUpdateOrder",
         data: {
@@ -67,6 +68,7 @@
                 success: function (result) {
                     if (result.code === 200) {
                         _this.order = result.data;
+                        updateOrder = result.data;
                     } else {
                         layer.alert("获取修改订单信息失败！");
                     }
@@ -115,12 +117,12 @@
 
                                             var desk = {};
 
-                                            desk.id = data.field.deskId;
+                                            desk.id = updateOrder.deskId;
                                             desk.status = 0;
 
                                             $.ajax({
-                                                url: "user/update",
-                                                data: JSON.stringify(user),
+                                                url: "desk/update",
+                                                data: JSON.stringify(desk),
                                                 dataType: "json",
                                                 contentType: "application/json",
                                                 type: "put",

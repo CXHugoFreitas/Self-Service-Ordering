@@ -3,8 +3,6 @@ package com.controller;
 import com.model.Category;
 import com.service.CategoryService;
 import com.utils.FileUtil;
-import com.utils.ResultVOUtil;
-import com.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -187,37 +185,24 @@ public class PageController {
         return "orderEdit";
     }
 
-
-    /**
-     * 添加菜的种类
-     */
-    @PostMapping("/saveCate")
-    public String save(@RequestParam("img") MultipartFile file, @RequestParam("cateName") String cateName) {
-        try {
-            Category category = new Category();
-            category.setCateName(cateName);
-
-            String fileName = file.getOriginalFilename();
-
-            if (fileName.endsWith(".gif")) {
-                fileName = UUID.randomUUID() + ".gif";
-            } else if (fileName.endsWith(".jpg")) {
-                fileName = UUID.randomUUID() + ".jpg";
-            } else if (fileName.endsWith(".png")) {
-                fileName = UUID.randomUUID() + ".png";
-            } else if (fileName.endsWith(".jpeg")) {
-                fileName = UUID.randomUUID() + ".jpeg";
-            } else {
-                return "activityList";
-            }
-
-            //文件上传
-            FileUtil.uploadFile(fileName.getBytes(), FileUtil.UPLOAD_PATH + fileName);
-            category.setImg(fileName);
-            categoryService.save(category);
-            return "activityList";
-        } catch (Exception ex) {
-            return "activityList";
-        }
+    @GetMapping("/orderDetailManage")
+    public String orderDetailManage() {
+        return "orderDetailManage";
     }
+
+    @GetMapping("/orderDetailList")
+    public String orderDetailList() {
+        return "orderDetailList";
+    }
+
+    @GetMapping("/orderDetailAdd")
+    public String orderDetailAdd() {
+        return "orderDetailAdd";
+    }
+
+    @GetMapping("/orderDetailEdit")
+    public String orderDetailEdit() {
+        return "orderDetailEdit";
+    }
+
 }

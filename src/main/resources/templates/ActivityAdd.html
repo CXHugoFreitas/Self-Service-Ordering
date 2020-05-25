@@ -23,9 +23,18 @@
                 </label>
                 <div class="layui-input-block">
                     <div class="layui-input-inline layui-show-xs-block">
-
-                        <input class="layui-input" id="name" name="name"
+                        <input class="layui-input" id="name" lay-verify="required" name="name"
                                type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="content">
+                    <span class="x-red">*</span>活动内容
+                </label>
+                <div class="layui-input-block">
+                    <div class="layui-input-inline layui-show-xs-block">
+                        <textarea class="layui-textarea" id="content" lay-verify="required" name="content"></textarea>
                     </div>
                 </div>
             </div>

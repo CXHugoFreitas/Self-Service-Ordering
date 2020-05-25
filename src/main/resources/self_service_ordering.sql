@@ -165,11 +165,7 @@ CREATE TABLE `order`
     `user_id`     int(11)                                                       NULL     DEFAULT NULL COMMENT '用户id',
     `desk_id`     int(11)                                                       NULL     DEFAULT NULL COMMENT '餐桌id',
     `address`     varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL     DEFAULT NULL COMMENT '外送地点',
-    `cate_id`     int(11)                                                       NULL     DEFAULT NULL COMMENT '菜品分类id',
-    `size`        int(11)                                                       NULL     DEFAULT NULL COMMENT '分量',
-    `num`         int(11)                                                       NULL     DEFAULT NULL COMMENT '数量',
-    `price`       int(11)                                                       NULL     DEFAULT NULL COMMENT '单价',
-    `amount`      int(11)                                                       NULL     DEFAULT NULL COMMENT '总价',
+    `amount`      int(11)                                                       null comment '总价',
     `pay_type`    int(11)                                                       NULL     DEFAULT NULL COMMENT '支付方式',
     `status`      int(11)                                                       NULL     DEFAULT NULL COMMENT '支付状态 0、未支付 1、已支付',
     `create_time` datetime(0)                                                   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '下单时间',
@@ -180,13 +176,17 @@ CREATE TABLE `order`
   COLLATE = utf8mb4_general_ci COMMENT = '订单'
   ROW_FORMAT = Dynamic;
 
--- ----------------------------
--- Records of order
--- ----------------------------
-INSERT INTO `order`
-VALUES (1, 5, 1, '', 1, 3, 50, 50, 2500, NULL, NULL, '2020-05-25 00:02:08');
-INSERT INTO `order`
-VALUES (3, 6, 3, '', 2, 3, 20, 15, 300, 3, 1, '2020-05-25 00:04:45');
+
+create table order_detail
+(
+    order_id  int(11) null comment '',
+    `cate_id` int(11) NULL DEFAULT NULL COMMENT '菜品分类id',
+    `size`    int(11) NULL DEFAULT NULL COMMENT '分量',
+    `num`     int(11) NULL DEFAULT NULL COMMENT '数量',
+    `price`   int(11) NULL DEFAULT NULL COMMENT '单价',
+    `amount`  int(11) null comment '总价'
+) comment '订单详情';
+
 
 -- ----------------------------
 -- Table structure for score_rule

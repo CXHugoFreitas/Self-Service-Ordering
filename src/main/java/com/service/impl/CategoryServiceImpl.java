@@ -1,12 +1,12 @@
 package com.service.impl;
 
+import com.dao.CategoryDao;
 import com.dao.DishDao;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.model.Category;
 import com.model.Dish;
 import com.service.CategoryService;
-import com.dao.CategoryDao;
 import com.utils.RequestParamsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,7 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
     public int save(Category category) {
         categoryDao.save(category);
 
-        int cateId =  category.getId();
+        int cateId = category.getId();
         //默认添加小份数量
         Dish smallDish = new Dish();
         smallDish.setCateId(cateId);

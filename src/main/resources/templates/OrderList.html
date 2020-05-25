@@ -30,8 +30,8 @@
             <div class="layui-card">
 
                 <div class="layui-card-header">
-                    <button class="layui-btn" onclick="xadmin.open('下单点餐','/orderAdd',500,700)">
-                        <i class="layui-icon"></i>下单点餐
+                    <button class="layui-btn" onclick="xadmin.open('预约订单','/orderAdd',500,400)">
+                        <i class="layui-icon"></i>预约订单
                     </button>
                 </div>
                 <div class="layui-card-body">
@@ -40,10 +40,7 @@
                         <tr>
                             <th>序号</th>
                             <th>餐桌编号</th>
-                            <th>菜品分类</th>
-                            <th>分量</th>
-                            <th>数量</th>
-                            <th>单价</th>
+                            <th>外送地址</th>
                             <th>总价</th>
                             <th>支付方式</th>
                             <th>支付状态</th>
@@ -55,12 +52,7 @@
                         <tr v-for="order,i in pageInfo.list">
                             <td v-text="i+1"></td>
                             <td v-text="order.deskNo"></td>
-                            <td v-text="order.cateName"></td>
-                            <td v-if="order.size === 1">小份</td>
-                            <td v-if="order.size === 2">中份</td>
-                            <td v-if="order.size === 3">大份</td>
-                            <td v-text="order.num"></td>
-                            <td v-text="order.price"></td>
+                            <td v-text="order.address"></td>
                             <td v-text="order.amount"></td>
                             <td>
                                 <template v-if="order.payType == 1">微信</template>
@@ -79,6 +71,13 @@
                                         onclick="xadmin.open('支付订单','/orderEdit',500,400)"
                                         v-if="order.status === 0">
                                     <i class="layui-icon">&#xe631;</i>支付
+                                </button>
+                                <button @click="ordering(order.id)"
+                                        class="layui-btn"
+                                        id="ordering"
+                                        onclick="xadmin.open('点餐','/orderDetailManage',1000,1200, true)"
+                                        v-if="order.status === 0">
+                                    <i class="layui-icon layui-icon-console"></i>点餐
                                 </button>
                                 <button @click="delOrder(order.id)"
                                         class="layui-btn layui-btn-danger"
@@ -188,6 +187,9 @@
             editOrder: function (editOrderId) {
                 //把要修改的editOrderId存到sessionStorage中
                 sessionStorage.setItem("editOrderId", editOrderId);
+            },
+            ordering: function (orderingOrderId) {
+                sessionStorage.setItem("orderingOrderId", orderingOrderId);
             }
         },
         created: function () {

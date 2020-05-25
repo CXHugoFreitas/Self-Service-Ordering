@@ -2,7 +2,7 @@
 <html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>订单管理</title>
+    <title>订单详情管理</title>
     <meta content="webkit" name="renderer">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
@@ -16,9 +16,6 @@
 
 <body>
 <div class="x-nav">
-            <span class="layui-breadcrumb">
-                <a target="_top" th:href="@{/index}">首页</a>
-            </span>
     <a class="layui-btn layui-btn-small" onclick="location.reload()"
        style="line-height:1.6em;margin-top:3px;float:right" title="刷新">
         <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
@@ -26,55 +23,53 @@
 </div>
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
-        <div class="layui-col-md12" id="vmOrder">
+        <div class="layui-col-md12" id="vmOrderDetail">
             <div class="layui-card">
+
+                <!--<div class="layui-card-header">
+                    <button class="layui-btn" onclick="xadmin.open('添加菜品','/orderDetailAdd',500,700)">
+                        <i class="layui-icon"></i>添加菜品
+                    </button>
+                </div>-->
                 <div class="layui-card-body">
                     <table class="layui-table layui-form">
                         <thead>
                         <tr>
                             <th>序号</th>
-                            <th>用户名</th>
-                            <th>餐桌编号</th>
+                            <th>菜品分类</th>
+                            <th>分量</th>
+                            <th>数量</th>
+                            <th>单价</th>
                             <th>总价</th>
-                            <th>支付方式</th>
-                            <th>支付状态</th>
-                            <th>下单时间</th>
-                            <th>操作</th>
+                            <!--                            <th>操作</th>-->
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="order,i in pageInfo.list">
+                        <tr v-for="orderDetail,i in pageInfo.list">
                             <td v-text="i+1"></td>
-                            <td v-text="order.userName"></td>
-                            <td v-text="order.deskNo"></td>
-                            <td v-text="order.amount"></td>
-                            <td>
-                                <template v-if="order.payType == 1">微信</template>
-                                <template v-if="order.payType == 2">支付宝</template>
-                                <template v-if="order.payType == 3">银行卡</template>
-                                <template v-if="order.payType == 4">现金</template>
-                                <template v-if="order.payType == 5">其他方式</template>
-                            </td>
-                            <td style="color: #FFB800" v-if="order.status === 0">未支付</td>
-                            <td style="color: green" v-if="order.status === 1">已支付</td>
-                            <td v-text="order.createTime"></td>
-                            <td class="td-manage">
-                                <button @click="delOrder(order.id)"
+                            <td v-text="orderDetail.cateName"></td>
+                            <td v-if="orderDetail.size === 1">小份</td>
+                            <td v-if="orderDetail.size === 2">中份</td>
+                            <td v-if="orderDetail.size === 3">大份</td>
+                            <td v-text="orderDetail.num"></td>
+                            <td v-text="orderDetail.price"></td>
+                            <td v-text="orderDetail.amount"></td>
+                            <!--<td class="td-manage">
+                                &lt;!&ndash;<button @click="editOrderDetail(orderDetail.id)"
+                                        class="layui-btn layui-btn-warm"
+                                        id="editOrderDetail"
+                                        onclick="xadmin.open('编辑订单详情','/orderDetailEdit',500,700)">
+                                    <i class="layui-icon">&#xe631;</i>编辑
+                                </button>&ndash;&gt;
+                                <button @click="delOrderDetail(orderDetail.id)"
                                         class="layui-btn layui-btn-danger"
-                                        id="delOrder"
-                                        v-if="order.status === 1">
+                                        id="delOrderDetail">
                                     <i class="layui-icon">&#xe640;</i>删除
                                 </button>
-                                <button @click="orderDetailList(order.id)"
-                                        class="layui-btn"
-                                        id="orderDetailList"
-                                        onclick="xadmin.open('订单详情','/orderDetailList',600,900, true)">
-                                    <i class="layui-icon layui-icon-console"></i>订单详情
-                                </button>
-                            </td>
+                            </td>-->
                         </tr>
                         <tr v-if="pageInfo.total == 0">
-                            <td colspan="100" style="text-align: center">暂无订单信息！</td>
+                            <td colspan="100" style="text-align: center">暂无订单详情信息！</td>
                         </tr>
                         </tbody>
                     </table>
@@ -108,18 +103,19 @@
 </body>
 <script type="text/javascript">
 
-    layui.use(['form'], function () {
-    });
+
+    var orderDetailListId = sessionStorage.getItem("orderDetailListId");
+
 
     vm = new Vue({
-        el: "#vmOrder",
+        el: "#vmOrderDetail",
         data: {
             pageInfo: {}
         },
         methods: {
             getPage: function (pageNum, pageSize) {
                 var _this = this;
-                var url = "/order/page?pageNum=" + pageNum;
+                var url = "/orderDetail/page?pageNum=" + pageNum;
 
                 if (!pageSize) {
                     url += "&pageSize=" + _this.pageInfo.pageSize;
@@ -127,21 +123,23 @@
                     url += "&pageSize=" + pageSize;
                 }
 
+                url += "&orderId=" + orderDetailListId;
+
                 $.getJSON(url, function (data) {
                     _this.pageInfo = data;
                 });
             },
             /**
-             * 删除订单
+             * 删除订单详情
              */
-            delOrder: function (id) {
+            delOrderDetail: function (id) {
                 layer.confirm('确认要删除吗？',
                     function () {
                         //发异步删除数据
                         $.ajax({
-                            url: "/order/deleteById",
+                            url: "/orderDetail/deleteById",
                             data: {
-                                id: id
+                                order_id: id
                             },
                             dataType: "json",
                             type: "delete",
@@ -164,19 +162,27 @@
             },
             /**
              *
-             * 修改订单
+             * 修改订单详情
              */
-            editOrder: function (editOrderId) {
-                //把要修改的editOrderId存到sessionStorage中
-                sessionStorage.setItem("editOrderId", editOrderId);
+            editOrderDetail: function (editOrderDetailId) {
+                //把要修改的editOrderDetailId存到sessionStorage中
+                sessionStorage.setItem("editOrderDetailId", editOrderDetailId);
             },
-            orderDetailList: function (orderDetailListId) {
-                sessionStorage.setItem("orderDetailListId", orderDetailListId);
+            /**
+             *
+             * 订单详情详情
+             */
+            viewOrderDetail: function (viewOrderDetailId) {
+                //把要修改的viewOrderDetailId存到sessionStorage中
+                sessionStorage.setItem("viewOrderDetailId", viewOrderDetailId);
             }
         },
         created: function () {
             this.getPage(1, 5);
         }
+    });
+
+    layui.use(['form'], function () {
     });
 
 </script>

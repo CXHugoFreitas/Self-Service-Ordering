@@ -1,10 +1,10 @@
 package com.service.impl;
 
+import com.dao.ScoreRuleDao;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.model.ScoreRule;
 import com.service.ScoreRuleService;
-import com.dao.ScoreRuleDao;
 import com.utils.RequestParamsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
