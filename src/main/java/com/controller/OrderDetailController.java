@@ -46,8 +46,8 @@ public class OrderDetailController {
      * 通过order_id查询单个订单详情
      */
     @GetMapping("/findById")
-    public ResultVO findById(@RequestParam(value = "order_id") Integer order_id) {
-        OrderDetail orderDetail = orderDetailService.findById(order_id);
+    public ResultVO findById(@RequestParam(value = "id") Integer id) {
+        OrderDetail orderDetail = orderDetailService.findById(id);
         return ResultVOUtil.success(orderDetail);
     }
 
@@ -80,8 +80,8 @@ public class OrderDetailController {
      * 删除订单详情
      */
     @DeleteMapping("/deleteById")
-    public ResultVO deleteById(@RequestParam(value = "order_id") Integer order_id) {
-        return orderDetailService.deleteById(order_id);
+    public ResultVO deleteById(@RequestParam(value = "id") Integer id) {
+        return orderDetailService.deleteById(id);
     }
 
 }

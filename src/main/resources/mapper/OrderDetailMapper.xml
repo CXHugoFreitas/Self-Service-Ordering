@@ -141,5 +141,10 @@
         from order_detail
         where id = #{id}
     </delete>
+    <delete id="deleteByOrderId">
+        delete
+        from order_detail
+        where order_id = #{id}
+    </delete>
 
 </mapper>

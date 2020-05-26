@@ -1,7 +1,5 @@
 package com.service.impl;
 
-import java.util.Date;
-
 import com.dao.DishDao;
 import com.dao.OrderDao;
 import com.dao.OrderDetailDao;
@@ -16,6 +14,7 @@ import com.utils.ResultVOUtil;
 import com.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,8 +60,8 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      * 通过order_id查询单个订单详情
      */
     @Override
-    public OrderDetail findById(Integer orderId) {
-        return orderDetailDao.findById(orderId);
+    public OrderDetail findById(Integer id) {
+        return orderDetailDao.findById(id);
     }
 
     /**
@@ -77,11 +76,13 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      * 新增订单详情
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResultVO save(OrderDetail orderDetail) {
 
         Integer orderId = orderDetail.getOrderId();
-        Map<String, Object> map = new HashMap<>();
-        map.put("orderId", orderId);
+
+        Map<String, Object> orderMap = new HashMap<>();
+        orderMap.put("id", orderId);
 
         Map<String, Object> othermap = new HashMap<>();
         othermap.put("cateId", orderDetail.getCateId());
@@ -95,11 +96,8 @@ public class OrderDetailServiceImpl implements OrderDetailService {
             //保存菜品
             orderDetailDao.save(orderDetail);
             //计算价格
-            List<OrderDetail> orderDetailList = orderDetailDao.list(map);
-            long amount = orderDetailList.stream().mapToInt(OrderDetail::getAmount).sum();
-            Order order = new Order();
-            order.setId(orderId);
-            order.setAmount((int) amount);
+            Order order = orderDao.findByMap(orderMap);
+            order.setAmount(order.getAmount() + orderDetail.getAmount());
             //修改价格
             orderDao.update(order);
             //修改库存
@@ -115,6 +113,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      * 修改订单详情
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResultVO update(OrderDetail newOrderDetail) {
 
         OrderDetail oldOrderDetail = orderDetailDao.findById(newOrderDetail.getId());
@@ -163,9 +162,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      * 删除订单详情
      */
     @Override
-    public ResultVO deleteById(Integer orderId) {
+    @Transactional(rollbackFor = Exception.class)
+    public ResultVO deleteById(Integer id) {
 
-        OrderDetail oldOrderDetail = orderDetailDao.findById(orderId);
+        OrderDetail oldOrderDetail = orderDetailDao.findById(id);
+        //删除详情
+        orderDetailDao.deleteById(id);
 
         Map<String, Object> oldMap = new HashMap<>();
 
@@ -174,16 +176,17 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         //修改回来库存
         Dish oldDish = dishDao.findByMap(oldMap);
         oldDish.setQuantity(oldDish.getQuantity() + oldOrderDetail.getNum());
-        //计算价格
-        List<OrderDetail> orderDetailList = orderDetailDao.list(oldMap);
-        long amount = orderDetailList.stream().mapToInt(OrderDetail::getAmount).sum();
-        Order order = new Order();
-        order.setId(orderId);
-        order.setAmount((int) amount);
-        //修改价格
-        orderDao.update(order);
+
         //修改库存
         dishDao.update(oldDish);
+        //修改价格
+        Map<String, Object> orderMap = new HashMap<>();
+        orderMap.put("id", oldOrderDetail.getOrderId());
+        Order oldOrder = orderDao.findByMap(orderMap);
+        oldOrder.setAmount(oldOrder.getAmount() - oldOrderDetail.getAmount());
+        //修改价格
+        orderDao.update(oldOrder);
+
         return ResultVOUtil.success();
     }
 

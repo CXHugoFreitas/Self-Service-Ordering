@@ -30,7 +30,7 @@ public interface OrderDetailService {
     /**
      * 通过order_id查询单个订单详情
      */
-    OrderDetail findById(Integer orderId);
+    OrderDetail findById(Integer id);
 
     /**
      * 通过map查询单个订单详情
@@ -50,6 +50,6 @@ public interface OrderDetailService {
     /**
      * 删除订单详情
      */
-    ResultVO deleteById(Integer orderId);
+    ResultVO deleteById(Integer id);
 
 }

@@ -16,7 +16,7 @@ public interface OrderDetailDao {
     /**
      * 通过order_id查询单个订单详情
      */
-    OrderDetail findById(Integer orderId);
+    OrderDetail findById(Integer id);
 
     /**
      * 通过map查询单个订单详情
@@ -41,6 +41,10 @@ public interface OrderDetailDao {
     /**
      * 删除订单详情
      */
-    int deleteById(Integer order_id);
+    int deleteById(Integer id);
 
+    /**
+     * 删除订单详情
+     */
+    void deleteByOrderId(Integer id);
 }

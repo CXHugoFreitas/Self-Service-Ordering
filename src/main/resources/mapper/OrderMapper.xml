@@ -86,8 +86,8 @@
             <if test="status != null and status != ''">and a.status =
                 #{status}
             </if>
-            <if test="createTime != null and createTime != ''">and create_time =
-                #{createTime}
+            <if test="createTime != null and createTime != ''">and DATE(create_time) =
+                DATE(#{createTime})
             </if>
             <if test="address != null and address != ''">and address =
                 #{address}

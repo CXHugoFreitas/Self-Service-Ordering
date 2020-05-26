@@ -28,6 +28,23 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12" id="vmOrder">
             <div class="layui-card">
+                <div class="layui-card-header">
+                    <div class="layui-card-body">
+                        <form class="layui-form layui-col-space5" onsubmit="return false;">
+                            <div class="layui-input-inline layui-show-xs-block">
+                                <input class="layui-input" id="createTime" name="createTime" placeholder="请选择下单日期">
+                            </div>
+                            <div class="layui-input-inline layui-show-xs-block">
+                                <button @click="search()" class="layui-btn" lay-filter="search" lay-submit="">
+                                    <i class="layui-icon layui-icon-search"></i>搜索
+                                </button>
+                                <button class="layui-btn layui-btn-primary" type="reset">
+                                    <i class="layui-icon layui-icon-refresh"></i>重置
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <div class="layui-card-body">
                     <table class="layui-table layui-form">
                         <thead>
@@ -108,9 +125,6 @@
 </body>
 <script type="text/javascript">
 
-    layui.use(['form'], function () {
-    });
-
     vm = new Vue({
         el: "#vmOrder",
         data: {
@@ -127,9 +141,15 @@
                     url += "&pageSize=" + pageSize;
                 }
 
-                $.getJSON(url, function (data) {
-                    _this.pageInfo = data;
-                });
+                if ($("#createTime").val().length > 0) {
+                    url += "&createTime=" + $("#createTime").val();
+                }
+
+                if ($())
+
+                    $.getJSON(url, function (data) {
+                        _this.pageInfo = data;
+                    });
             },
             /**
              * 删除订单
@@ -172,6 +192,9 @@
             },
             orderDetailList: function (orderDetailListId) {
                 sessionStorage.setItem("orderDetailListId", orderDetailListId);
+            },
+            search: function () {
+                this.getPage(1, 5);
             }
         },
         created: function () {
@@ -179,5 +202,14 @@
         }
     });
 
+    layui.use(['form', 'laydate'], function () {
+
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#createTime' //指定元素
+        });
+    });
 </script>
 </html>

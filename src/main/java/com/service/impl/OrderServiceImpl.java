@@ -1,6 +1,7 @@
 package com.service.impl;
 
 import com.dao.OrderDao;
+import com.dao.OrderDetailDao;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.model.Order;
@@ -22,6 +23,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderDao orderDao;
+    @Autowired
+    private OrderDetailDao orderDetailDao;
 
     /**
      * 查询订单页面
@@ -80,6 +83,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public int deleteById(Integer id) {
+        orderDetailDao.deleteByOrderId(id);
         return orderDao.deleteById(id);
     }
 
