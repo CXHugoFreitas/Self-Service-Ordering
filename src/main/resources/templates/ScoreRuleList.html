@@ -112,18 +112,35 @@
              * 兑换积分
              */
             useScore: function (score) {
+                var newSessionUser = {};
 
-                if (sessionUser.score - score < 0) {
-                    layer.alert('积分不足，无法兑换商品！');
-                    return false;
-                }
+                //先获取用户积分，不能用session的
+                $.ajax({
+                    url: "/user/findById",
+                    data: {
+                        "id": sessionUser.id
+                    },
+                    dataType: "json",
+                    type: "get",
+                    success: function (result) {
+                        if (result.code === 200) {
+                            newSessionUser = result.data;
+                            if (newSessionUser.score - score < 0) {
+                                layer.alert('积分不足，无法兑换商品！');
+                                return false;
+                            }
+                        } else {
+                            layer.alert("获取用户信息失败！");
+                        }
+                    }
+                });
 
                 layer.confirm('确认要兑换吗？',
                     function () {
 
                         var user = {};
                         user.id = sessionUser.id;
-                        user.score = sessionUser.score - score;
+                        user.score = newSessionUser.score - score;
 
                         //发异步，把数据提交给controller
                         $.ajax({
